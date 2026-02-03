@@ -1,20 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useRef, useState, useEffect, useMemo } from 'react'
-import { useFrame, useLoader, useThree } from '@react-three/fiber'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
+import { useFrame, useThree } from '@react-three/fiber'
 import { MathUtils } from "three"
 
 import { useMotionValueEvent, useScroll, useTransform } from "framer-motion"
 
 import { useAnimations } from '@react-three/drei'
+import { isMobile } from 'react-device-detect';
 
-export default function Haile () {
+
+export default function Haile ({ scene, animations}) {
     const { scrollYProgress } = useScroll()
     
     const haileRotation = useTransform(scrollYProgress,
-        [0, .2, .3, .36, .45, .55, .6, .65], 
-        [Math.PI/3.5, -Math.PI, Math.PI, 0, -Math.PI/5, Math.PI/5, Math.PI/2, Math.PI])
+        [0, .2,.4, .55, .7], 
+        [Math.PI/3.5, -Math.PI, -Math.PI * 2, -Math.PI * 2, -Math.PI])
         
     const haileRotationDelta = useTransform(scrollYProgress,
         [0, .1], 
@@ -27,22 +27,15 @@ export default function Haile () {
 
     const haileRef = useRef()
 
-
-    const {scene, animations} =  useLoader(GLTFLoader, '/assets/RenderUnwrappedDraco.glb', (loader) => {
-        const dracoLoader = new DRACOLoader()
-        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
-        loader.setDRACOLoader(dracoLoader)
-    })
-
     const { mixer } = useAnimations(animations, scene)
 
     useMotionValueEvent(scrollYProgress, "change", (current) => {
-        if(current < .2) {
+        if(current < .38) {
             mixer.timeScale = 1/3
             setAction(keyFrames['Idle0'])
         } else if(current < .54) {
             mixer.timeScale = .8
-            setAction(keyFrames['FightIdle0'])
+            setAction(keyFrames[`FightIdle${!isMobile & 'Glitch'}0`])
         } else if(current < .9) {
             mixer.timeScale = .7
             setAction(keyFrames['Run0'])
@@ -54,12 +47,12 @@ export default function Haile () {
 
     useEffect(() => {
         const fn = (e) => {
-            if(scrollYProgress.current < .2) {
+            if(scrollYProgress.current < .38) {
                 haileRef.current.visible = true
                 setAction(keyFrames[`Idle${Math.floor(Math.random() * 2)}`])
             } else if((scrollYProgress.current < .5)) {
                 haileRef.current.visible = true
-                setAction(keyFrames[`FightIdle${Math.floor(Math.random() * 2)}`])
+                setAction(keyFrames[`FightIdle${!isMobile & 'Glitch'}${Math.floor(Math.random() * 2)}`])
             }  else if (scrollYProgress.current < .9) {
                 haileRef.current.visible = true
                 setAction(keyFrames['Run0'])
@@ -100,6 +93,6 @@ export default function Haile () {
       })
 
     return (
-       <primitive ref={haileRef} object={scene} rotation={[0, 0, 0]} position= {[0, .05, 0]} scale={.1} />
+        <primitive ref={haileRef} object={scene} rotation={[0, 0, 0]} position= {[0, .05, 0]} scale={.1} />
     )
 }

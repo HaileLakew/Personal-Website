@@ -1,20 +1,12 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
-import Lottie from "lottie-react";
-import rotatingCube from "../../public/assets/rotatingCube.json";
+import { motion } from 'framer-motion'
 
 export default function AboutPage() {
-    const { scrollYProgress } = useScroll()
-
-    const opacity = useTransform( scrollYProgress, 
-        [.3, .36],
-        [1, 0]
-    )
 
     return (
-        <section className={"h-[80vh] w-screen"}>
-            <div className={'m-5'}>
-                <div className='h-full overflow-hidden'>
-                    <motion.div className='flex justify-center text-white text-center text-4xl md:text-9xl p-10 relative'
+        <section className={"h-[70vh] w-screen"}>
+            <div className={'m-5 sticky top-20 '}>
+                <div className='h-full z-20 overflow-hidden'>
+                    <motion.div className=' text-white text-center text-4xl md:text-9xl p-10 z-20'
                                     initial={{ opacity: 0, y: '100%'}} 
                                     whileInView={{ opacity: 1, y: '0%', transition: {delay: .25, duration: 1}}}>
                                                 MANIFESTO
@@ -41,9 +33,6 @@ export default function AboutPage() {
                     </motion.div>
                 </div>
             </div>
-            <motion.div style={{opacity}} >
-                <Lottie className='h-[30vh] w-screen' animationData={rotatingCube} loop={true} />
-            </motion.div>
         </section>
     )
 }

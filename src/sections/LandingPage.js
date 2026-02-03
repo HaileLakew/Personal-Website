@@ -23,7 +23,8 @@ export default function LandingPage() {
                     <motion.path initial={{fill: '#0b0b0b'}} transition={{ delay: 6.5, duration: 2}} animate={{fill: "#ffffff"}} d="M70.584 1.89999H69.084V3.39999V44.012H9.23597V3.39999V1.89999H7.73597H3.38397H1.88397V3.39999V93V94.5H3.38397H7.73597H9.23597V93V50.98H69.084V93V94.5H70.584H74.936H76.436V93V3.39999V1.89999H74.936H70.584Z" stroke="white" strokeWidth="3"/>
                 </motion.svg>
                 <motion.svg 
-                    className={`h-[10%] mt-5 lg:h-[25%] bottom-[20%] sm:bottom-0 relative`}
+                    className={`h-[10%] mt-5 lg:h-[25%] bottom-[20%] sm:bottom-0 relative z-20`}
+                    style={{  filter: "drop-shadow( 1px 1px 1px rgba(1, 1, 1, .7))"}}
                     initial={{ strokeDasharray: 800, strokeDashoffset: 800}} 
                     transition={{ delay: 2, duration: 10}} 
                     animate={{ strokeDashoffset: 0}} 
@@ -34,9 +35,7 @@ export default function LandingPage() {
                     <motion.path initial={{fill: '#0b0b0b'}} transition={{ delay: 6.5, duration: 2}} animate={{fill: "#ffffff"}} d="M484.035 92.3699L483.049 94.5H485.396H490.132H491.094L491.495 93.6262L503.148 68.26H554.812L566.465 93.6262L566.866 94.5H567.828H572.564H574.911L573.925 92.3699L532.453 2.76993L532.051 1.89999H531.092H526.868H525.909L525.507 2.76993L484.035 92.3699ZM551.729 61.548H506.231L528.98 12.0271L551.729 61.548Z" stroke="white" strokeWidth="3"/>
                     <motion.path initial={{fill: '#0b0b0b'}} transition={{ delay: 6.5, duration: 2}} animate={{fill: "#ffffff"}} d="M424.884 93V94.5H426.384H483.216H484.716V93V89.032V87.532H483.216H432.236V3.39999V1.89999H430.736H426.384H424.884V3.39999V93Z" stroke="white" strokeWidth="3"/>
                 </motion.svg>
-            </>
-
-            }
+            </>}
         </motion.section>
 
     )

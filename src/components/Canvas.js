@@ -1,21 +1,26 @@
 'use client'
 import { Canvas } from '@react-three/fiber'
-import { AdaptiveDpr, AdaptiveEvents, PerformanceMonitor, Preload, Stats } from '@react-three/drei'
+import { AdaptiveDpr, AdaptiveEvents, OrbitControls, PerformanceMonitor, Preload, Stats } from '@react-three/drei'
 
 import CameraRig from './CameraRig'
-import Haile from './Haile'
 import LightingRig from './LightingRig'
 import Effects from './Effects'
+
 import { Suspense, useState } from 'react'
 import { useScroll, useTransform, motion} from "framer-motion"
 
+import { isMobile } from 'react-device-detect';
+
+
+import Models from './Models'
+
 export default function CustomCanvas({click}) {
-    const [dpr, setDpr] = useState(.8)
+    const [dpr, setDpr] = useState(isMobile? .7 : .8)
 
     const { scrollYProgress } = useScroll()
     const opacity = useTransform(scrollYProgress, 
         [0, .08, .13, .32, .37, .8, 1], 
-        [1, 1, 0, 0, 1, 1, 0])
+        [1, 1, .25, 0, 1, 1, 0])
 
     return(
         <motion.div className="h-screen w-screen fixed z-10 overflow-hidden"      
@@ -27,31 +32,29 @@ export default function CustomCanvas({click}) {
                 <Suspense fallback={null}>
                     <Canvas
                         dpr={dpr}
-                        camera={{
-                            position: [0, 5, 15],
-                            // fov: 85,
-                        }}
+                        camera={{ position: [0, 5, 15] }}
                         gl={{ antialias: false}}
                         performance={{ min: 0.1 }}
                         onCreated={({ gl }) => ((gl.shadowMap.autoUpdate = false), (gl.shadowMap.needsUpdate = true))}
                     >
-                    <PerformanceMonitor 
-                        flipflops={2} onFallback={() => setDpr(.8)}
-                        onIncline={() => setDpr(.8)} onDecline={() => setDpr(.5)} >
-                        <Preload all/>
-                        <AdaptiveDpr pixelated/>
-                        <AdaptiveEvents />
+                        <PerformanceMonitor 
+                            flipflops={2} onFallback={() => setDpr(.8)}
+                            onIncline={() => setDpr(.8)} onDecline={() => setDpr(.5)} >
 
-                        {/* <Stats/> */}
+                            <Preload all/>
+                            <AdaptiveDpr pixelated/>
+                            <AdaptiveEvents />
+                            <Stats/>
 
-                        <Suspense fallback={null}>
-                            <Haile/>
-                        </Suspense>
+                            {/* <OrbitControls/> */}
 
-                        <Effects click={click}/>
-                        <CameraRig/>
-                        <LightingRig/>
-                    </PerformanceMonitor>
+                            <Models/>
+
+                            <Effects click={click}/>
+                            <CameraRig/>
+                            <LightingRig/>
+                            
+                        </PerformanceMonitor>
                     </Canvas>
                 </Suspense>
         </motion.div>

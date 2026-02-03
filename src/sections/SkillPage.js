@@ -1,9 +1,6 @@
 import RotatingList from "@/components/RotatingList";
 import { useTransform, useScroll, motion } from "framer-motion";
 
-import techPulse from "../../public/assets/techPulse.json";
-import Lottie from "lottie-react";
-
 export default function SkillPage() {
     const { scrollYProgress } = useScroll()
 
@@ -11,26 +8,19 @@ export default function SkillPage() {
     const html02Opacity = useTransform(scrollYProgress, [.66, .7, .73, .75], [0, 1, 1, 0])
     const html03Opacity = useTransform(scrollYProgress, [.8, .82, .87, .9], [0, 1, 1, 0])
 
-    const svgAnimationOpacity = useTransform(scrollYProgress, [.42, .45, .5, .52], [0, 1, 1, 0])
-
     return (
       <section className="w-screen text-white overflow-visible">
-        <motion.div className="sticky top-10 sm:w-1/2 md:w-1/4 sm:left-[25%] md:left-[37%] sm:top-[25%] md:top-[10%]" 
-            style={{ opacity: svgAnimationOpacity }}>
-            <Lottie className="relative" animationData={techPulse} />
-        </motion.div>
-
         <motion.div className="h-[150vh] w-screen" style={{ opacity: html01Opacity }}>
             <div className="sticky top-20 md:top-28 m-5">
-                <div className="py-2 text-center text-sm sm:text-2xl"> HAILE LAKEW </div>
+                <div className="py-2 text-center text-sm sm:text-3xl"> HAILE LAKEW </div>
                 <motion.div
                 initial={{ opacity: 0}} 
                 whileInView={{ opacity: 1, transition: {delay: 1, duration: 1}}} 
-                className="text-2xl font-bold text-center sm:text-2xl ">Senior Software Engineer</motion.div>
+                className="text-2xl font-bold text-center sm:text-3xl ">Senior Software Engineer</motion.div>
                 <motion.div 
                 initial={{ opacity: 0}} 
                 whileInView={{ opacity: 1, transition: {delay: 1, duration: 1}}} 
-                className="text-sm text-center sm:text-2xl">Bachelor of Computer Science</motion.div>
+                className="text-sm text-center sm:text-3xl">Bachelor of Computer Science</motion.div>
             </div>
         </motion.div>
 
