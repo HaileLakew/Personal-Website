@@ -8,6 +8,8 @@ import { useScroll, useTransform } from "framer-motion"
 import './shaders/simulationMaterial'
 import './shaders/dofPointsMaterial'
 
+const positions = new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0])
+const uvs =  new Float32Array([0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0])
 
 export function Particles({  
   geometries = [],
@@ -31,13 +33,12 @@ export function Particles({
   // Set up FBO
   const [scene] = useState(() => new THREE.Scene())
   const [camera] = useState(() => new THREE.OrthographicCamera(-1, 1, 1, -1, 1 / Math.pow(2, 53), 1))
-  const [positions] = useState(() => new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0]))
-  const [uvs] = useState(() => new Float32Array([0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0]))
+
   const target = useFBO(size, size, {
     minFilter: THREE.NearestFilter,
     magFilter: THREE.NearestFilter,
     format: THREE.RGBAFormat,
-    type: THREE.FloatType
+    type: THREE.HalfFloatType
   })
 
   // Normalize points
@@ -54,20 +55,26 @@ export function Particles({
 
   // Update FBO and pointcloud every frame
   useFrame((state) => {
+// Simulation Pass
     state.gl.setRenderTarget(target)
-    state.gl.clear()
     state.gl.render(scene, camera)
     state.gl.setRenderTarget(null)
 
-    renderRef.current.uniforms.positions.value = target.texture
-    renderRef.current.uniforms.uTime.value = state.clock.elapsedTime
-    renderRef.current.uniforms.uFocus.value = THREE.MathUtils.lerp(renderRef.current.uniforms.uFocus.value, focus, 0.1)
-    renderRef.current.uniforms.uFov.value = THREE.MathUtils.lerp(renderRef.current.uniforms.uFov.value, fov, 0.1)
-    renderRef.current.uniforms.uBlur.value = THREE.MathUtils.lerp(renderRef.current.uniforms.uBlur.value, (5.6 - aperture) * 9, 0.1)
+    // Update Uniforms (Optimized: direct access to current)
+    const rU = renderRef.current.uniforms
+    const sU = simRef.current.uniforms
 
-    simRef.current.uniforms.uTime.value = state.clock.elapsedTime * speed
-    simRef.current.uniforms.uProgress.value = progress.current
-    simRef.current.uniforms.uCurlFreq.value = THREE.MathUtils.lerp(simRef.current.uniforms.uCurlFreq.value, curl, 0.1)
+    rU.positions.value = target.texture
+    rU.uTime.value = state.clock.elapsedTime
+    
+    // Smooth lerps
+    rU.uFocus.value = THREE.MathUtils.lerp(rU.uFocus.value, focus, 0.1)
+    rU.uFov.value = THREE.MathUtils.lerp(rU.uFov.value, fov, 0.1)
+    rU.uBlur.value = THREE.MathUtils.lerp(rU.uBlur.value, (5.6 - aperture) * 9, 0.1)
+
+    sU.uTime.value = state.clock.elapsedTime * speed
+    sU.uProgress.value = progress.get() // use .get() for framer-motion values in useFrame
+    sU.uCurlFreq.value = THREE.MathUtils.lerp(sU.uCurlFreq.value, curl, 0.1)
 
   })
 
@@ -75,7 +82,7 @@ export function Particles({
   const modelB = geometries[1]
 
   return (
-    <Suspense fallback={null}>
+    <>
       {/* Simulation goes into a FBO/Off-buffer */}
       {createPortal(
         <mesh>
@@ -94,6 +101,6 @@ export function Particles({
           <bufferAttribute attach="attributes-position" count={particles.length / 3} array={particles} itemSize={3} />
         </bufferGeometry>
       </points>
-    </Suspense>
+    </>
   )
 }

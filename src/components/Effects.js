@@ -1,11 +1,10 @@
-import { ToneMapping, EffectComposer, Bloom, Glitch, Scanline, LensFlare } from '@react-three/postprocessing'
+import { ToneMapping, EffectComposer, Bloom, Glitch } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
-import { Environment, Lightformer, Line, MeshReflectorMaterial, Sparkles } from '@react-three/drei'
+import { Line, Sparkles } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useRef } from 'react'
 import { MathUtils } from "three"
 import { useScroll, useTransform } from "framer-motion"
-import { isMobile } from 'react-device-detect';
 
 
 export default function Effects() {
@@ -28,8 +27,7 @@ export default function Effects() {
                     duration={[0.1, 0.2]} 
                     strength={[0.1, 10]} />
 
-                <Bloom luminanceThreshold={0} luminanceSmoothing={0.0} intensity={1.5} />
-                {isMobile && <Scanline blendFunction={BlendFunction.ACES_FILMIC} density={4}/>}
+                <Bloom luminanceThreshold={0} luminanceSmoothing={0.0} intensity={1.25} />
 
             </EffectComposer>
 

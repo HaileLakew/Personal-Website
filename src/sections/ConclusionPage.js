@@ -1,20 +1,13 @@
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-
+import { motion } from 'framer-motion'
 export default function ConclusionPage() {
-    // const { scrollYProgress } = useScroll()
 
-    // useMotionValueEvent(scrollYProgress, "change", (current) => {
-    //     if(current===1 && typeof window !== "undefined") {
-    //         window.open('/docs/Resume.pdf', "_blank");
-    //     }
-    // })
     return (
-        <section className="h-screen text-white flex justify-center items-center overflow-hidden text-3xl">
-            <a href="/docs/Resume.pdf" target="_blank">
-                <motion.div>
+        <section className="h-screen text-white flex justify-center items-center overflow-hidden text-5xl pointer-events-auto">
+            <motion.div  className=' text-white text-center p-10 z-20' whileHover={{scale: 1.2}}>
+                <a href="/docs/Resume.pdf" target="_blank">
                     Lets<b className='pl-1 text-amber-400'>Connect.</b>
-                </motion.div>
-           </a>
+                </a>
+            </motion.div>
         </section>
     )
 }

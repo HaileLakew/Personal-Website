@@ -21,7 +21,6 @@ export default function Home() {
       <AboutPage/>
       <SkillPage/>
       <ConclusionPage/>
-      <div className="h-[25vh]"/>
     </main>
   );
 }

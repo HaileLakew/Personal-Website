@@ -23,7 +23,7 @@ export default function CustomCanvas() {
         [1, 1, .25, 0, 1, 1, 0])
 
     return(
-        <motion.div className="h-screen w-screen fixed  overflow-hidden"      
+        <motion.div className="h-screen w-screen fixed  overflow-hidden pointer-events-none"      
             style={{ opacity}}        
             initial={{ opacity: 0, filter: 'blur(50px)' }}
             whileInView={{ opacity: 1, filter: 'blur(0px)', transition: { delay: 1, duration: 3 } }}
