@@ -11,6 +11,17 @@ import './shaders/dofPointsMaterial'
 const positions = new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0])
 const uvs =  new Float32Array([0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0])
 
+
+// Normalize points
+const size = 512;
+const length = size * size;
+const particles = new Float32Array(length * 3);
+for (let i = 0; i < length; i++) {
+  particles[i * 3 + 0] = (i % size) / size;
+  particles[i * 3 + 1] = i / size / size;
+  particles[i * 3 + 2] = 0;
+}
+
 export function Particles({  
   geometries = [],
   speed = 50, 
@@ -41,18 +52,6 @@ export function Particles({
     format: THREE.RGBAFormat,
     type: THREE.HalfFloatType
   })
-
-  // Normalize points
-  const particles = useMemo(() => {
-    const length = size * size
-    const particles = new Float32Array(length * 3)
-    for (let i = 0; i < length; i++) {
-      let i3 = i * 3
-      particles[i3 + 0] = (i % size) / size
-      particles[i3 + 1] = i / size / size
-    }
-    return particles
-  }, [size])
 
   useLayoutEffect(() => {
     if (simRef.current && renderRef.current) {
