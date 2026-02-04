@@ -4,8 +4,7 @@ import "./globals.css";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <meta name="theme-color" content="#000000"></meta>
+    <html lang="en" style={{background: 'black'}}>
       <body>
         {children}
         <SpeedInsights />
