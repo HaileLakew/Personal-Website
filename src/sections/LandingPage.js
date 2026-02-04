@@ -1,4 +1,5 @@
 import { useProgress } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion'
 
 export default function LandingPage() {   
@@ -9,6 +10,12 @@ export default function LandingPage() {
             className='h-screen w-screen flex justify-start pt-64 sm:pt-0 sm:justify-center items-center flex-col overflow-hidden'>
             {progress === 100 &&
             <>
+                <motion.div  
+                    className="h-screen text-white flex justify-center items-center overflow-hidden absolute text-xl md:text-3xl font-light"
+                    initial={{ opacity: 1}} 
+                    transition={{ duration: 1}}
+                    animate={{ opacity: 0 }} 
+                    >Initializing ...</motion.div>
                 <motion.svg 
                     className={"h-[10%] lg:h-[25%] relative bottom-[20%] sm:bottom-0 z-20"}
                     style={{  filter: "drop-shadow( 1px 1px 1px rgba(1, 1, 1, .7))"}}

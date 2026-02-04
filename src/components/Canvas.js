@@ -1,6 +1,6 @@
 'use client'
 import { Canvas } from '@react-three/fiber'
-import { AdaptiveDpr, AdaptiveEvents, OrbitControls, PerformanceMonitor, Preload, Stats } from '@react-three/drei'
+import { AdaptiveDpr, AdaptiveEvents, OrbitControls, PerformanceMonitor, Preload, Stats, Html } from '@react-three/drei'
 
 import CameraRig from './CameraRig'
 import LightingRig from './LightingRig'
@@ -14,7 +14,7 @@ import { isMobile } from 'react-device-detect';
 
 import Models from './Models'
 
-export default function CustomCanvas({click}) {
+export default function CustomCanvas() {
     const [dpr, setDpr] = useState(isMobile? .7 : .8)
 
     const { scrollYProgress } = useScroll()
@@ -23,7 +23,7 @@ export default function CustomCanvas({click}) {
         [1, 1, .25, 0, 1, 1, 0])
 
     return(
-        <motion.div className="h-screen w-screen fixed z-10 overflow-hidden"      
+        <motion.div className="h-screen w-screen fixed  overflow-hidden"      
             style={{ opacity}}        
             initial={{ opacity: 0, filter: 'blur(50px)' }}
             whileInView={{ opacity: 1, filter: 'blur(0px)', transition: { delay: 1, duration: 3 } }}
@@ -50,10 +50,9 @@ export default function CustomCanvas({click}) {
 
                             <Models/>
 
-                            <Effects click={click}/>
+                            <Effects/>
                             <CameraRig/>
                             <LightingRig/>
-                            
                         </PerformanceMonitor>
                     </Canvas>
                 </Suspense>

@@ -1,9 +1,9 @@
 import * as THREE from 'three'
-import { useMemo, useState, useRef } from 'react'
+import { useMemo, useState, useRef, Suspense } from 'react'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useFBO } from '@react-three/drei'
 
-import { useScroll, useTransform, useMotionValueEvent } from "framer-motion"
+import { useScroll, useTransform } from "framer-motion"
 
 import './shaders/simulationMaterial'
 import './shaders/dofPointsMaterial'
@@ -75,7 +75,7 @@ export function Particles({
   const modelB = geometries[1]
 
   return (
-    <>
+    <Suspense fallback={null}>
       {/* Simulation goes into a FBO/Off-buffer */}
       {createPortal(
         <mesh>
@@ -94,6 +94,6 @@ export function Particles({
           <bufferAttribute attach="attributes-position" count={particles.length / 3} array={particles} itemSize={3} />
         </bufferGeometry>
       </points>
-    </>
+    </Suspense>
   )
 }

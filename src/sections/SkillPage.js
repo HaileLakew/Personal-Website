@@ -5,8 +5,8 @@ export default function SkillPage() {
     const { scrollYProgress } = useScroll()
 
     const html01Opacity = useTransform(scrollYProgress, [.42, .48, .52, .54], [0, 1, 1, 0])
-    const html02Opacity = useTransform(scrollYProgress, [.66, .7, .73, .75], [0, 1, 1, 0])
-    const html03Opacity = useTransform(scrollYProgress, [.8, .82, .87, .9], [0, 1, 1, 0])
+    const html02Opacity = useTransform(scrollYProgress, [.56, .57, .65, .75], [0, 1, 1, 0])
+    const html03Opacity = useTransform(scrollYProgress, [.78, .82, .87, .9], [0, 1, 1, 0])
 
     return (
       <section className="w-screen text-white overflow-visible">

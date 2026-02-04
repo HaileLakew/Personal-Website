@@ -28,8 +28,8 @@ export default function Effects() {
                     duration={[0.1, 0.2]} 
                     strength={[0.1, 10]} />
 
-                <Bloom luminanceThreshold={0} luminanceSmoothing={0.0} intensity={5} />
-                {isMobile && <Scanline blendFunction={BlendFunction.SOFT_LIGHT} density={4}/>}
+                <Bloom luminanceThreshold={0} luminanceSmoothing={0.0} intensity={1.5} />
+                {isMobile && <Scanline blendFunction={BlendFunction.ACES_FILMIC} density={4}/>}
 
             </EffectComposer>
 
