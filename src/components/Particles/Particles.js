@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useMemo, useState, useRef, Suspense } from 'react'
+import { useMemo, useState, useRef, useLayoutEffect  } from 'react'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useFBO } from '@react-three/drei'
 
@@ -28,7 +28,8 @@ export function Particles({
     [0, .46, .5, .65], 
     [0, 1, 1, 0])
 
-  const { mouse } = useThree();
+  const [isReady, setIsReady] = useState(false);
+  const { gl } = useThree();
 
   // Set up FBO
   const [scene] = useState(() => new THREE.Scene())
@@ -53,9 +54,22 @@ export function Particles({
     return particles
   }, [size])
 
+  useLayoutEffect(() => {
+    if (simRef.current && renderRef.current) {
+      const simMesh = new THREE.Mesh(new THREE.PlaneGeometry(), simRef.current)
+      const renderMesh = new THREE.Points(new THREE.BufferGeometry(), renderRef.current)
+      gl.compile(simMesh, camera)
+      gl.compile(renderMesh, camera)
+      
+      // Mark as ready so useFrame can start
+      setIsReady(true)
+    }
+  }, [gl, camera])
+
   // Update FBO and pointcloud every frame
   useFrame((state) => {
-// Simulation Pass
+    if (!isReady || !simRef.current || !renderRef.current) return
+    // Simulation Pass
     state.gl.setRenderTarget(target)
     state.gl.render(scene, camera)
     state.gl.setRenderTarget(null)
