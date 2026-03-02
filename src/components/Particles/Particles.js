@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useMemo, useState, useRef, useLayoutEffect  } from 'react'
+import { useMemo, useState, useRef  } from 'react'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useFBO } from '@react-three/drei'
 
@@ -12,15 +12,7 @@ const positions = new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 
 const uvs =  new Float32Array([0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0])
 
 
-// Normalize points
-const size = 512;
-const length = size * size;
-const particles = new Float32Array(length * 3);
-for (let i = 0; i < length; i++) {
-  particles[i * 3 + 0] = (i % size) / size;
-  particles[i * 3 + 1] = i / size / size;
-  particles[i * 3 + 2] = 0;
-}
+
 
 export function Particles({  
   geometries = [],
@@ -39,8 +31,19 @@ export function Particles({
     [0, .46, .5, .65], 
     [0, 1, 1, 0])
 
-  const [isReady, setIsReady] = useState(false);
-  const { gl } = useThree();
+  const particles = useMemo(() => {
+      const length = size * size;
+      const array = new Float32Array(length * 3);
+      
+      for (let i = 0; i < length; i++) {
+        // Logic: mapping 1D index to a 2D grid [0, 1]
+        array[i * 3 + 0] = (i % size) / size;
+        array[i * 3 + 1] = i / size / size;
+        array[i * 3 + 2] = 0;
+      }
+      return array;
+    }, [size]);
+
 
   // Set up FBO
   const [scene] = useState(() => new THREE.Scene())
@@ -53,23 +56,14 @@ export function Particles({
     type: THREE.HalfFloatType
   })
 
-  useLayoutEffect(() => {
-    if (simRef.current && renderRef.current) {
-      const simMesh = new THREE.Mesh(new THREE.PlaneGeometry(), simRef.current)
-      const renderMesh = new THREE.Points(new THREE.BufferGeometry(), renderRef.current)
-      gl.compile(simMesh, camera)
-      gl.compile(renderMesh, camera)
-      
-      // Mark as ready so useFrame can start
-      setIsReady(true)
-    }
-  }, [gl, camera])
-
   // Update FBO and pointcloud every frame
   useFrame((state) => {
-    if (!isReady || !simRef.current || !renderRef.current) return
+    if (!simRef.current || !renderRef.current) return
+    
+    state.gl.autoClear = false
     // Simulation Pass
     state.gl.setRenderTarget(target)
+    state.gl.clear() // Clear the FBO buffer
     state.gl.render(scene, camera)
     state.gl.setRenderTarget(null)
 

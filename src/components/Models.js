@@ -94,12 +94,15 @@ export default function Models () {
             
             <group ref={ParticlesRef}>
                 {!isMobile &&
+                <Suspense fallback={null}>
                     <Particles 
                         position= {[0, .05, 0]} 
                         geometries={[
                             GeometryA,
                             GeometryB
                         ]} />
+                </Suspense>
+
                 }
             </group>
         </Suspense>
