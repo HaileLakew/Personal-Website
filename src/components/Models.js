@@ -2,18 +2,15 @@
 import { useFrame, useLoader } from '@react-three/fiber'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
-
 import { MathUtils } from "three"
-
 import * as THREE from 'three'
-
 import Haile from './Haile'
-
-import { Suspense, useRef, useState } from 'react'
-import { Particles } from './Particles/Particles'
+import { Suspense, useRef, useState, useEffect, lazy } from 'react'
 import { useScroll, useMotionValueEvent, useTransform } from "framer-motion"
+import { isMobile } from 'react-device-detect'
 
-import { isMobile } from 'react-device-detect';
+// Lazy load the Particles component
+const Particles = lazy(() => import('./Particles/Particles').then(module => ({ default: module.Particles })))
 
 export default function Models () {
     const { scrollYProgress } = useScroll()
@@ -42,11 +39,8 @@ export default function Models () {
     CustomModelB.scale(.11, .098, .05)
 
     const HaileGeometry = new Float32Array([
-        // ...model.nodes.FBHead.geometry.attributes.position.array,
-        // ...model.nodes.Plane002.geometry.attributes.position.array,
         ...CustomModelA.attributes.position.array, 
         ...CustomModelB.attributes.position.array]);
-
 
     const SphereGeometry = new THREE.SphereGeometry( 2, 128*2, 128*2 );
     const customSphereGeometry = new Float32Array([...SphereGeometry.attributes.position.array,])
@@ -64,6 +58,22 @@ export default function Models () {
     const [toggleBox, setToggleBox] = useState(false)
     const [toggleSphere, setToggleSphere] = useState(true)
 
+    // State to toggle particles rendering
+    const [shouldRenderParticles, setShouldRenderParticles] = useState(false)
+    
+    // Ref to track benchmark performance across frames without triggering re-renders
+    const fpsTracker = useRef({ active: true, frames: 0, time: 0 })
+
+    // Baseline gate: Mount particles initially if not on mobile and WebGL2 is supported
+    useEffect(() => {
+        const hasWebGL2 = !!window.WebGL2RenderingContext;
+        if (!isMobile && hasWebGL2) {
+            setShouldRenderParticles(true);
+        } else {
+            fpsTracker.current.active = false; // Skip benchmarking entirely
+        }
+    }, [])
+
     useMotionValueEvent(scrollYProgress, "change", (current) => {
         if(current < .5 && !toggleSphere) {
             setGetGeometryB(customSphereGeometry)
@@ -77,15 +87,37 @@ export default function Models () {
     })
 
     useFrame((state, delta) => {
-        ParticlesRef.current.rotation.y = MathUtils.damp(ParticlesRef.current.rotation.y, haileRotation.current, haileRotationDelta.current, delta);
+        if (ParticlesRef.current) {
+            ParticlesRef.current.rotation.y = MathUtils.damp(ParticlesRef.current.rotation.y, haileRotation.current, haileRotationDelta.current, delta);
 
-        if( scrollYProgress.current < .5) {
-            ParticlesRef.current.position.x = MathUtils.damp(ParticlesRef.current.position.x, 0 , 10, delta);
-        } else {
-            ParticlesRef.current.position.x = MathUtils.damp(ParticlesRef.current.position.x, Math.sin(state.clock.elapsedTime) , 1, delta);
+            if( scrollYProgress.current < .5) {
+                ParticlesRef.current.position.x = MathUtils.damp(ParticlesRef.current.position.x, 0 , 10, delta);
+            } else {
+                ParticlesRef.current.position.x = MathUtils.damp(ParticlesRef.current.position.x, Math.sin(state.clock.elapsedTime) , 1, delta);
+            }
         }
 
- 
+        // Micro-benchmark execution
+        if (fpsTracker.current.active && shouldRenderParticles) {
+            fpsTracker.current.frames += 1;
+            
+            // Skip the first 30 frames to allow shaders to compile and scene to stabilize
+            if (fpsTracker.current.frames > 30) {
+                fpsTracker.current.time += delta;
+            }
+            
+            // Evaluate at 90 frames (60 measured frames = ~1 second of optimal runtime)
+            if (fpsTracker.current.frames === 90) {
+                fpsTracker.current.active = false; // Stop tracking
+                
+                const averageFps = 60 / fpsTracker.current.time;
+                
+                // If the average framerate drops below 40 FPS, unmount the particles
+                if (averageFps < 40) {
+                    setShouldRenderParticles(false);
+                }
+            }
+        }
     })
 
     return (
@@ -93,16 +125,15 @@ export default function Models () {
             <Haile scene={HaileModel.scene} animations={HaileModel.animations}/>
             
             <group ref={ParticlesRef}>
-                {!isMobile &&
-                <Suspense fallback={null}>
-                    <Particles 
-                        position= {[0, .05, 0]} 
-                        geometries={[
-                            GeometryA,
-                            GeometryB
-                        ]} />
-                </Suspense>
-
+                {shouldRenderParticles &&
+                    <Suspense fallback={null}>
+                        <Particles 
+                            position= {[0, .05, 0]} 
+                            geometries={[
+                                GeometryA,
+                                GeometryB
+                            ]} />
+                    </Suspense>
                 }
             </group>
         </Suspense>
