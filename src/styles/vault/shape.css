@@ -1,0 +1,48 @@
+:root{
+/* radii — die-cut */
+--radius-chip:14px;
+--radius-swatch:16px;
+--radius-bubble:16px;
+--radius-card:22px;
+--radius-screen:28px;
+--radius-pill:999px;
+--radius-circle:50%;
+
+/* rules */
+--rule-solid:1.5px solid; /* @kind other */
+--rule-dashed:2px dashed; /* @kind other */
+--rule-hairline:1px solid; /* @kind other */
+--rule-width:1.5px;
+
+/* spacing */
+--space-screen:14px;
+--space-card:16px;
+--space-card-lg:18px;
+--space-card-x:20px;
+--space-gap:12px;
+--space-gap-sm:10px;
+--space-gap-xs:6px;
+--space-peek:16px;
+
+/* sizes */
+--size-button-h:54px;
+--size-button-h-min:50px;
+--size-button-h-max:56px;
+--size-icon-button:52px;
+--size-icon-button-sm:44px;
+--size-icon-button-lg:60px;
+--size-icon:20px;
+--size-hero-glyph:46px;
+--size-dot:14px;
+
+/* elevation — flat by default; only the top card of a stack lifts */
+--shadow-stack-top:0 14px 24px -12px rgba(0,0,0,.7);
+
+/* motion — mechanical, no bounce */
+--ease-mech:cubic-bezier(.2,0,0,1); /* @kind other */
+--dur-press:120ms; /* @kind other */
+--dur-gauge:500ms; /* @kind other */
+--dur-dot:240ms; /* @kind other */
+--dur-pulse:1.8s; /* @kind other */
+--press-scale:.98; /* @kind other */
+}

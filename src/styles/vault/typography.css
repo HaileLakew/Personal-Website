@@ -1,0 +1,40 @@
+:root{
+--font-display:'Archivo',system-ui,sans-serif;
+--font-body:'Archivo',system-ui,sans-serif;
+--font-mono:'Space Mono',ui-monospace,monospace;
+
+/* SHOUT — display */
+--display-weight:900;
+--display-stretch-wide:125%;
+--display-stretch:112%;
+--display-leading:.85;
+--display-leading-loose:.95;
+--display-tracking:-.03em;
+--display-tracking-tight:-.04em;
+--size-numeral-hero:120px;
+--size-numeral:110px;
+--size-numeral-intro:80px;
+--size-display-xl:96px;
+--size-display-lg:52px;
+--size-title:30px;
+--size-title-card:26px;
+--size-wordmark:26px;
+--size-title-sm:22px;
+--size-title-xs:18px;
+--size-button:15px;
+
+/* WHISPER — mono micro label */
+--label-weight:700;
+--label-tracking:.5px;
+--size-label-lg:13px;
+--size-label:11px;
+--size-label-sm:10px;
+--size-label-xs:9px;
+
+/* TALK — body */
+--body-weight:500;
+--body-leading:1.45;
+--size-body-lg:16px;
+--size-body:15px;
+--size-body-sm:14px;
+}
