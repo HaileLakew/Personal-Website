@@ -69,15 +69,6 @@ export default function SkillPage() {
         <div className="sticky top-0 h-screen flex flex-col justify-center">
           <Lane
             left={
-              <motion.div onViewportEnter={() => setFilled(true)} viewport={{ once: true, amount: .3 }} className="h-full">
-                <Card tone="steel" label="03 · Skills" meta="Out of 5" footer="Self-rated" footerRight="7 tracked">
-                  <div className="flex-1 flex justify-center items-end mt-4">
-                    <GaugeGroup items={SKILLS.map(s => ({ letter: s.letter, value: filled ? s.level / 5 : 0 }))} height="46vh" color="var(--vault-ink)" />
-                  </div>
-                </Card>
-              </motion.div>
-            }
-            right={
               <div className="h-full flex flex-col" style={{ borderTop: '1.5px solid #3A3A3A' }}>
                 {SKILLS.map(s => (
                   <div key={s.letter} className="flex-1 grid grid-cols-[1.375rem_minmax(0,1fr)_auto] gap-3 items-center py-3" style={{ borderBottom: '1.5px solid #3A3A3A' }}>
@@ -87,6 +78,15 @@ export default function SkillPage() {
                   </div>
                 ))}
               </div>
+            }
+            right={
+              <motion.div onViewportEnter={() => setFilled(true)} viewport={{ once: true, amount: .3 }} className="h-full">
+                <Card tone="steel" label="03 · Skills" meta="Out of 5" footer="Self-rated" footerRight="7 tracked">
+                  <div className="flex-1 flex justify-center items-end mt-4">
+                    <GaugeGroup items={SKILLS.map(s => ({ letter: s.letter, value: filled ? s.level / 5 : 0 }))} height="16vh" color="var(--vault-ink)" />
+                  </div>
+                </Card>
+              </motion.div>
             }
           />
         </div>

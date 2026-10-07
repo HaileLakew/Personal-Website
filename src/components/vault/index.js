@@ -61,7 +61,7 @@ export function Icon({ name, set = 'feather', size = 20, color = 'currentColor' 
   return <span aria-hidden="true" style={{ display: 'inline-block', flex: 'none', width: r(size), height: r(size), background: color, WebkitMask: m, mask: m }} />
 }
 
-export function GaugeGroup({ items = [], height = 64, color = 'currentColor', fill = 'var(--vault-terracotta)' }) {
+export function GaugeGroup({ items = [], height = 10, color = 'currentColor', fill = 'var(--vault-terracotta)' }) {
   return (
     <div style={{ display: 'flex', gap: r(6), padding: r(6), border: '1.5px solid ' + color, color }}>
       {items.map((it, i) => (
