@@ -1,7 +1,20 @@
+@import "../styles/vault/colors.css";
+@import "../styles/vault/typography.css";
+@import "../styles/vault/shape.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.html {
-    background-color: black;
+:root {
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-body: 'Archivo', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
 }
+
+/* Everything in the Vault UI is in rem, so this one line scales the whole layout with the viewport.
+   Uses whichever is smaller of width/height so tall and wide screens both fill. Raise 1.4vw / 2.4vh to go bigger. */
+html { background-color: #0E0E0E; scroll-behavior: smooth; font-size: clamp(14px, min(1.4vw, 2.4vh), 32px); }
+body { background: #0E0E0E; color: #EDE6DA; font-family: var(--font-body); }
+a { color: #E3A15F; text-decoration: none; }
+a:hover { color: #EDE6DA; }

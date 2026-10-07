@@ -20,7 +20,7 @@ export default function CustomCanvas() {
     const { scrollYProgress } = useScroll()
     const opacity = useTransform(scrollYProgress, 
         [0, .08, .13, .32, .37, .8, 1], 
-        [1, 1, .25, 0, 1, 1, 0])
+        [1, 1, 1, 1, 1, .5, 0])
 
     return(
         <motion.div className="h-screen w-screen fixed  overflow-hidden pointer-events-none"      

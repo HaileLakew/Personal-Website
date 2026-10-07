@@ -1,115 +1,120 @@
-import RotatingList from "@/components/RotatingList";
+import { useState } from 'react'
 import { useTransform, useScroll, motion } from "framer-motion";
+import { Card, GaugeGroup, Icon, mono, display, body, r } from '@/components/vault'
+import { Lane } from '@/components/vault/Lane'
 
+const SKILLS = [
+  ['JavaScript / Node', 4.5], ['React', 3.5], ['Webpack / Bundling', 3], ['CI / CD', 4.5],
+  ['Bash / Python', 3.5], ['Tailwind / Framer / CSS', 3], ['Three.js / WebGL / R3F', 3],
+].map(([name, level], i) => ({ name, level, letter: 'ABCDEFG'[i] }))
+
+const ABILITIES = [
+  ['Bash & Python', 'Auto', 'Automation', 'steel', 'Scripts that take repetitive work off my teams.'],
+  ['Frontend', 'React', 'JavaScript · React', 'brass', 'Web apps and sites in React, including this one.'],
+  ['Node scripting', 'Node', 'Node · Webpack', 'sage', 'Custom build scripts with fine-tuned optimizations.'],
+  ['CI / CD', 'Actions', 'GitHub Actions', 'steel', 'Custom actions that ship projects automatically.'],
+  ['Chrome plugins', 'Plugin', 'Productivity', 'brass', 'A plugin that highlights and saves key info on a page.'],
+  ['Three.js', 'WebGL', 'WebGL · R3F', 'sage', 'Interactive 3D sites with Three-Fiber and shaders.'],
+  ['Blender 3D', '3D', 'Modeling', 'steel', 'Models and animations, including the character here.'],
+].map(([title, short, tag, tone, text], i) => ({ title, short, tag, tone, text, num: '#0' + (i + 1) }))
+
+const label = (l, r) => (
+  <div className="flex justify-between" style={{ ...mono(11), color: '#8A8A8A' }}><span>{l}</span><span>{r}</span></div>
+)
+
+function AbilityCard({ a }) {
+  return (
+    <Card tone={a.tone} label={a.num} meta={a.short} title={a.title} titleSize={20} footer={a.tag} style={{ minHeight: '30vh' }}>
+      <div style={{ ...body(14, { lineHeight: 1.4 }), color: '#151515', marginTop: r(12) }}>{a.text}</div>
+    </Card>
+  )
+}
+
+// Block heights (150vh / 100vh / 100vh) and opacity keyframes are unchanged from the original.
 export default function SkillPage() {
-    const { scrollYProgress } = useScroll()
+  const { scrollYProgress } = useScroll()
+  const [filled, setFilled] = useState(false)
 
-    const html01Opacity = useTransform(scrollYProgress, [.42, .48, .52, .54], [0, 1, 1, 0])
-    const html02Opacity = useTransform(scrollYProgress, [.56, .57, .65, .75], [0, 1, 1, 0])
-    const html03Opacity = useTransform(scrollYProgress, [.78, .82, .87, .9], [0, 1, 1, 0])
+  const html01Opacity = useTransform(scrollYProgress, [.42, .48, .52, .54], [0, 1, 1, 0])
+  const html02Opacity = useTransform(scrollYProgress, [.56, .57, .65, .75], [0, 1, 1, 0])
+  const html03Opacity = useTransform(scrollYProgress, [.78, .82, .87, .9], [0, 1, 1, 0])
 
-    return (
-      <section className="w-screen text-white overflow-visible">
-        <motion.div className="h-[150vh] w-screen" style={{ opacity: html01Opacity }}>
-            <div className="sticky top-20 md:top-28 m-5">
-                <div className="py-2 text-center text-sm sm:text-3xl"> HAILE LAKEW </div>
-                <motion.div
-                initial={{ opacity: 0}} 
-                whileInView={{ opacity: 1, transition: {delay: 1, duration: 1}}} 
-                className="text-2xl font-bold text-center sm:text-3xl ">Senior Software Engineer</motion.div>
-                <motion.div 
-                initial={{ opacity: 0}} 
-                whileInView={{ opacity: 1, transition: {delay: 1, duration: 1}}} 
-                className="text-sm text-center sm:text-3xl">Bachelor of Computer Science</motion.div>
-            </div>
-        </motion.div>
+  return (
+    <section className="w-screen overflow-visible">
+      {/* 02 · Profile — torn ticket split across the lane */}
+      <motion.div className="h-[150vh] w-screen" style={{ opacity: html01Opacity }}>
+        <div className="sticky top-0 h-screen flex flex-col justify-center gap-4">
+          <Lane left={label('02 · Profile', '')} right={<div className="hidden md:block">{label('', 'Stub')}</div>} />
+          <Lane
+            left={
+              <Card tone="brass" label="Name" meta="#01" title="Haile Lakew" titleSize={40} footer="Senior software engineer" footerRight="B.S. CS">
+                <div style={{ minHeight: '26vh' }} />
+              </Card>
+            }
+            right={
+              <a href="/docs/HailemeskelLakew-Resume.pdf" target="_blank" rel="noreferrer" className="block h-full pointer-events-auto">
+                <Card tone="steel" label="Role" meta="Admit one" title="Sr. Eng" titleSize={40} footer="Résumé ↗" footerRight="PDF">
+                  <div style={{ minHeight: '26vh' }} />
+                </Card>
+              </a>
+            }
+          />
+        </div>
+      </motion.div>
 
-        <motion.div className="h-screen m-auto overflow-visible sm:ml-[25vw]">
-          <motion.div 
-            className={` text-white w-[50vw] sticky top-20 md:top-40`} 
-            style={{ opacity: html02Opacity }}
-            >
-            <div className="flex w-screen sm:flex-col md:w-[50vw] text-sm md:text-xl">
-                <div className="w-full p-5 font-light">
-                    <div className="py-2 ">SKILLS</div>
-                    <div className="sm:p-5" >
-                        {[
-                            {name: 'Javascript / Node', level: 4.5},
-                            {name: 'React', level: 3.5},
-                            {name: 'Weback / Bundling', level: 3},
-                            {name: 'CI / CD', level: 4.5},
-                            {name: 'Bash / Python', level: 3.5},
-                            {name: 'Tailwind / Framer / CSS Frameworks', level: 3},
-                            {name: 'Three JS / WebGL / Three-Fiber', level: 3}
-                        ].map((skill, index)=>{
-                        return(
-                            <motion.div key={index} className="py-1">
-                                {skill.name}
-                                <motion.div className={`bg-gradient-to-r from-amber-50 to-yellow-500 rounded-md p-1 absolute my-1 ${index%2===0 ? 'z-[11]' : 'z-[1]'}`}
-                                    animate={{ 
-                                        width: ['0%', `${10*skill.level}%`],
-                                        opacity: [0, .8, .8, 0]
-                                    }}
-                                    transition={{
-                                        duration: 2,
-                                        ease: "easeInOut",
-                                        times: [0, 0.2, 0.5, 0.8, 1],
-                                        repeat: Infinity,
-                                        repeatDelay: 1,
-                                    }}
-                                    />
-                                <motion.div className={`bg-gradient-to-r from-yellow-800 via-amber-200 to-yellow-500 rounded-md p-1 relative my-1 ${index%2===0 ? 'z-10' : 'z-0'}`}
-                                    initial={{ width: 0 }} 
-                                    whileInView={{  width: `${18*skill.level}%`}}
-                                    transition={{ delay: 2, duration: 2 }}
-                                    />
-                            </motion.div>
-                        )
-                        })}
-                    </div>
-                </div>
-            </div>
-            </motion.div>
-        </motion.div>
+      {/* 03 · Skills */}
+      <motion.div id="skills" className="h-screen w-screen" style={{ opacity: html02Opacity }}>
+        <div className="sticky top-0 h-screen flex flex-col justify-center">
+          <Lane
+            left={
+              <motion.div onViewportEnter={() => setFilled(true)} viewport={{ once: true, amount: .3 }} className="h-full">
+                <Card tone="steel" label="03 · Skills" meta="Out of 5" footer="Self-rated" footerRight="7 tracked">
+                  <div className="flex-1 flex justify-center items-end mt-4">
+                    <GaugeGroup items={SKILLS.map(s => ({ letter: s.letter, value: filled ? s.level / 5 : 0 }))} height="46vh" color="var(--vault-ink)" />
+                  </div>
+                </Card>
+              </motion.div>
+            }
+            right={
+              <div className="h-full flex flex-col" style={{ borderTop: '1.5px solid #3A3A3A' }}>
+                {SKILLS.map(s => (
+                  <div key={s.letter} className="flex-1 grid grid-cols-[1.375rem_minmax(0,1fr)_auto] gap-3 items-center py-3" style={{ borderBottom: '1.5px solid #3A3A3A' }}>
+                    <span style={{ ...mono(10), color: '#8A8A8A' }}>{s.letter}</span>
+                    <span style={{ ...mono(12), color: '#EDE6DA' }}>{s.name}</span>
+                    <span style={{ ...display(22, '125%', { lineHeight: .85 }), color: '#EDE6DA' }}>{s.level}</span>
+                  </div>
+                ))}
+              </div>
+            }
+          />
+        </div>
+      </motion.div>
 
-        <motion.div className="h-screen md:relative md:left-[27%] w-screen md:w-[50vw] text-sm md:text-xl" style={{ opacity: html03Opacity }}>
-          <motion.div className={` text-white w-[50vw] sticky top-20 md:top-40`} >
-            <div className="p-5">ABILITIES</div>
-
-            <RotatingList 
-                list = {[
-                        {   
-                            title: `Bash & Python Scripting`,
-                            message: `I have been able to automate repetitive tasks and instructions to improve productivity of teams I've worked with.`
-                        },
-                        {
-                            title: `Frontend Development`, 
-                            message: `Through the use of Javascript and React, I have developed several web applications and websites,
-                                        including this one.`
-                        },
-                        {
-                            title: `Node Scripting`,
-                            message: `Using Node with the power of Webpack, I have been able to create custom build scripts with fine tuned optimizations`
-                        },
-                        {
-                            title: "CI / CD", 
-                            message: `Using custom Github Actions, I have been able to automate the deployment of several projects, including this one.`},
-                        {
-                            title: "Chrome Plugin Development", 
-                            message: `In an effort to improve productivity, I have developed a chrome plugin to highlight and save important information on web pages.`
-                        },
-                        {
-                            title: "Three JS Development", 
-                            message: `Familiar with Three JS, Three-Fiber, and WebGL Shaders, I have designed a couple of interesting sites.`
-                        },
-                        {
-                            title: "Blender 3D Modeling",
-                            message: `I have created several 3D models and animations, such some of the assets used for this website.`
-                        }
-                    ]}
-              />
-            </motion.div>
-        </motion.div>
-      </section>
-    );
+      {/* 04 · Abilities */}
+      <motion.div id="abilities" className="h-screen w-screen" style={{ opacity: html03Opacity }}>
+        <div className="sticky top-0 h-screen flex flex-col justify-center gap-6">
+          <Lane left={label('04 · Abilities', '')} right={<div className="hidden md:block">{label('', '7 areas')}</div>} />
+          <Lane
+            left={
+              <div className="grid grid-cols-2 gap-3">
+                {ABILITIES.slice(0, 4).map(a => <AbilityCard key={a.num} a={a} />)}
+              </div>
+            }
+            right={
+              <div className="grid grid-cols-2 gap-3">
+                {ABILITIES.slice(4).map(a => <AbilityCard key={a.num} a={a} />)}
+                <a href="#connect" className="pointer-events-auto flex flex-col justify-between gap-6" style={{ background: '#151515', border: '1px solid #262626', borderRadius: r(22), padding: r(16) + ' ' + r(18), color: '#EDE6DA' }}>
+                  <span style={{ ...mono(10), color: '#8A8A8A' }}>Next</span>
+                  <div className="flex justify-between items-end">
+                    <span style={display(18)}>Work<br />together</span>
+                    <Icon name="arrow-top-right-thick" set="mdi" size={46} color="var(--vault-brass)" />
+                  </div>
+                </a>
+              </div>
+            }
+          />
+        </div>
+      </motion.div>
+    </section>
+  );
 }

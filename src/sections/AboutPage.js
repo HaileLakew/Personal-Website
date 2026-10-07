@@ -1,38 +1,58 @@
-import { motion } from 'framer-motion'
+import { mono, display, body } from '@/components/vault'
+import { Lane, Reveal } from '@/components/vault/Lane'
 
+const MANIFESTO = [
+  ['Creativity meets logic', 'Software engineering is where both live at once.'],
+  ['Beautiful + functional', 'Make it work, and make it worth looking at.'],
+  ['More than a solution', 'Problem-solving is about the path, not just the answer.'],
+  ['More than new', 'Innovation is more than making something that didn\u2019t exist.'],
+  ['Process = product', 'How you get there matters as much as what you ship.'],
+  ['Never done learning', 'Learning is a journey that doesn\u2019t end.'],
+].map(([title, text], i) => ({ n: '0' + (i + 1), title, text }))
+
+function Rows({ items }) {
+  return (
+    <div style={{ borderTop: '1.5px solid #3A3A3A' }}>
+      {items.map(m => (
+        <div key={m.n} className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-3 py-[2.4vh]" style={{ borderBottom: '1.5px solid #3A3A3A' }}>
+          <span style={{ ...mono(11), color: '#8A8A8A' }}>{m.n}</span>
+          <div className="flex flex-col gap-2">
+            <span style={{ ...display(24), color: '#EDE6DA' }}>{m.title}</span>
+            <span style={{ ...body(14), color: '#BDB5A8' }}>{m.text}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// Height kept at the original 70vh (min) so scroll beats are unchanged.
 export default function AboutPage() {
-
-    return (
-        <section className={"h-[70vh] w-screen"}>
-            <div className={'m-5 sticky top-20 '}>
-                <div className='h-full z-20 overflow-hidden'>
-                    <motion.div className=' text-white text-center text-4xl md:text-9xl p-10 z-20'
-                                    initial={{ opacity: 0, y: '100%'}} 
-                                    whileInView={{ opacity: 1, y: '0%', transition: {delay: .25, duration: 1}}}>
-                                                MANIFESTO
-                    </motion.div>
-                </div>
-                <div className='text-white text-justify m-8 sm:m-44 text-xl md:text-3xl h-full overflow-hidden'>         
-                    <motion.div
-                         initial={{ opacity: 0}} 
-                         whileInView={{ opacity: 1, transition: {delay: .5, duration: 1}}}
-                        >
-
-                            <b>Software Engineering</b> is where creativity and <b className='text-amber-500'>logic</b> meet.
-                            Where one can <b className='text-amber-500'>create</b> something beautiful and <b className='text-amber-500'>functional</b> at the same time.
-                            <b className='text-amber-500'> Problem-solving</b> is not just about finding a <b className='text-amber-500'>solution</b>. And
-                            <b className='text-amber-500'> Innovation</b> is not just about creating something new. The <b className='text-amber-500'>process</b> is just as important as the end product, and 
-                            <b className='text-amber-500'> learning</b> is a never-ending journey.
-                            <br/><br/>
-                            <motion.div 
-                                initial={{ opacity: 0}} 
-                                whileInView={{ opacity: 1, transition: {delay: 1, duration: 1}}} 
-                                className='text-center'>
-                                What if coding was more than just a job? What if it was <b className='text-amber-500'>passion</b>?
-                            </motion.div>
-                    </motion.div>
-                </div>
-            </div>
-        </section>
-    )
+  return (
+    <section id="manifesto" className="min-h-[70vh] w-screen border-t border-[#262626] py-[8vh] flex flex-col justify-center gap-[6vh]">
+      <Lane left={
+        <div className="flex flex-col gap-4">
+          <div style={{ ...mono(11), color: '#8A8A8A' }}>01 · Manifesto</div>
+          <div style={{ ...display(40, '125%', { lineHeight: .9 }), color: '#EDE6DA' }}>Why I build</div>
+        </div>
+      } />
+      <Lane
+        left={<Reveal><Rows items={MANIFESTO.slice(0, 3)} /></Reveal>}
+        right={<Reveal><Rows items={MANIFESTO.slice(3)} /></Reveal>}
+      />
+      <Lane
+        left={
+          <Reveal className="flex flex-col gap-2.5 justify-end h-full">
+            <div style={{ ...body(16), color: '#BDB5A8' }}>What if coding was more than a job?</div>
+            <div style={{ ...display(44, '125%', { lineHeight: .9 }), color: '#EDE6DA' }}>What if it was...</div>
+          </Reveal>
+        }
+        right={
+          <Reveal className="flex items-end h-full">
+            <div style={{ ...display(56, '125%', { lineHeight: .85, letterSpacing: '-.04em' }), color: '#E3A15F' }}>Passion?</div>
+          </Reveal>
+        }
+      />
+    </section>
+  )
 }

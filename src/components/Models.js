@@ -124,7 +124,7 @@ export default function Models () {
         <Suspense fallback={null}>
             <Haile scene={HaileModel.scene} animations={HaileModel.animations}/>
             
-            <group ref={ParticlesRef}>
+            {/* <group ref={ParticlesRef}>
                 {shouldRenderParticles &&
                     <Suspense fallback={null}>
                         <Particles 
@@ -135,7 +135,7 @@ export default function Models () {
                             ]} />
                     </Suspense>
                 }
-            </group>
+            </group> */}
         </Suspense>
     )
 }
