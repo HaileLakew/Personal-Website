@@ -4,8 +4,8 @@ import { Lane, Reveal } from '@/components/vault/Lane'
 // TODO: fill in your LinkedIn URL and email.
 const LINKS = [
   { label: 'GitHub', value: '@HaileLakew', href: 'https://github.com/HaileLakew' },
-  { label: 'LinkedIn', value: 'Haile Lakew', href: 'https://www.linkedin.com/' },
-  { label: 'Email', value: 'Say hello', href: 'mailto:hello@hailelakew.com' },
+  { label: 'LinkedIn', value: 'Haile Lakew', href: 'https://www.linkedin.com/in/haile-lakew-334159a8/' },
+  { label: 'Email', value: 'Say hello', href: 'mailto:contact@hailelakew.com' },
 ]
 
 export default function ConclusionPage() {
