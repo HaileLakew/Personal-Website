@@ -10,9 +10,6 @@ const CENTER = 1
 
 export default function CameraRig() {
     const { camera, scene } = useThree();
-    const hips = useRef(null)
-    const offsetX = useRef(0)
-    const v = useMemo(() => new Vector3(), [])
 
     const { x: cameraPositionX, y: cameraPositionY, z: cameraPositionZ } = useMatrixTransform({
         keyframes: [0, .05, .16, .3, .35, .46, .52, .54 , .64, .65, .75],
@@ -54,15 +51,9 @@ export default function CameraRig() {
             cameraLookAtPositionY.current, 
             cameraLookAtPositionZ.current)
 
-        if (!CENTER) return
-        if (!hips.current) scene.traverse(o => { if (!hips.current && o.isBone && /hip|pelvis|root/i.test(o.name)) hips.current = o })
-        const { width, height } = state.size
+
         camera.updateMatrixWorld()
         camera.clearViewOffset()
-        if (hips.current) hips.current.getWorldPosition(v); else v.set(0, 1, 0)
-        const target = v.project(camera).x * width / 2 * CENTER
-        offsetX.current = MathUtils.damp(offsetX.current, target, 4, delta)
-        if (Math.abs(offsetX.current) > .5) camera.setViewOffset(width, height, offsetX.current, 0, width, height)
     })
 
     return <></>

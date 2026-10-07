@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTransform, useScroll, motion } from "framer-motion";
-import { Card, GaugeGroup, Icon, mono, display, body, r } from '@/components/vault'
+import { Card, GaugeGroup, Icon, TicketStack, mono, display, body, r } from '@/components/vault'
 import { Lane } from '@/components/vault/Lane'
 
 const SKILLS = [
@@ -44,19 +44,21 @@ export default function SkillPage() {
       {/* 02 · Profile — torn ticket split across the lane */}
       <motion.div className="h-[150vh] w-screen" style={{ opacity: html01Opacity }}>
         <div className="sticky top-0 h-screen flex flex-col justify-center gap-4">
-          <Lane left={label('02 · Profile', '')} right={<div className="hidden md:block">{label('', 'Stub')}</div>} />
+          <Lane left={label('02 · Profile', '')} right={<div className="hidden md:block">{label('', 'Résumé · PDF')}</div>} />
           <Lane
             left={
-              <Card tone="brass" label="Name" meta="#01" title="Haile Lakew" titleSize={40} footer="Senior software engineer" footerRight="B.S. CS">
-                <div style={{ minHeight: '26vh' }} />
-              </Card>
+              <TicketStack items={[
+                { tone: 'brass', label: 'Name', meta: '#01', title: 'Haile Lakew', titleSize: 48, footer: '', footerRight: '' },
+                { tone: 'sage', label: '#02 Senior software engineer', meta: 'Role' },
+                { tone: 'var(--vault-terracotta)', label: '#03 B.S. Computer Science', meta: 'Degree' },
+              ]} />
             }
             right={
-              <a href="/docs/HailemeskelLakew-Resume.pdf" target="_blank" rel="noreferrer" className="block h-full pointer-events-auto">
-                <Card tone="steel" label="Role" meta="Admit one" title="Sr. Eng" titleSize={40} footer="Résumé ↗" footerRight="PDF">
-                  <div style={{ minHeight: '26vh' }} />
-                </Card>
-              </a>
+              <TicketStack href="/docs/HailemeskelLakew-Resume.pdf" items={[
+                { tone: 'steel', label: 'Role', meta: 'Admit one', title: 'Sr. Eng', titleSize: 48, arrow: true, footer: '', footerRight: '' },
+                { tone: 'brass', label: '#04 Résumé · PDF', meta: '↗' },
+                { tone: 'sage', label: '#05 Let\u2019s connect', meta: '↓' },
+              ]} />
             }
           />
         </div>

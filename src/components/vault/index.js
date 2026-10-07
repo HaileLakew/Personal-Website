@@ -63,13 +63,40 @@ export function Icon({ name, set = 'feather', size = 20, color = 'currentColor' 
 
 export function GaugeGroup({ items = [], height = 64, color = 'currentColor', fill = 'var(--vault-terracotta)' }) {
   return (
-    <div style={{ display: 'flex', width: '100vw', gap: r(6), padding: r(6), border: '1.5px solid ' + color, color }}>
+    <div style={{ display: 'flex', gap: r(6), padding: r(6), border: '1.5px solid ' + color, color }}>
       {items.map((it, i) => (
         <div key={it.letter || i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: r(4) }}>
-          <div style={{ width: r(60), height: typeof height === 'number' ? r(height) : height, border: '1.5px solid ' + color, boxSizing: 'border-box', display: 'flex', alignItems: 'flex-end' }}>
+          <div style={{ width: r(20), height: typeof height === 'number' ? r(height) : height, border: '1.5px solid ' + color, boxSizing: 'border-box', display: 'flex', alignItems: 'flex-end' }}>
             <div style={{ width: '100%', height: Math.max(0, Math.min(1, it.value)) * 100 + '%', background: fill, transition: 'height .5s cubic-bezier(.2,0,0,1)' }} />
           </div>
           <span style={mono(9, { letterSpacing: 0 })}>{it.letter}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// Ticket stack: first item in full, the rest peek 16px below (bottom corners rounded only).
+export function TicketStack({ items = [], href }) {
+  const [top, ...rest] = items
+  if (!top) return null
+  const t = TONES[top.tone] || TONES.brass
+  const head = (
+    <div style={{ position: 'relative', zIndex: items.length + 1, background: t.bg, color: t.fg, borderRadius: r(22), padding: r(18) + ' ' + r(20), boxShadow: '0 14px 24px -12px rgba(0,0,0,.7)', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, ...mono(10) }}><span>{top.label}</span><span>{top.meta}</span></div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: r(12), marginTop: r(14), marginBottom: r(18) }}>
+        <div style={display(top.titleSize || 40, '125%', { lineHeight: .88 })}>{top.title}</div>
+        {top.arrow && <Icon name="arrow-top-right-thick" set="mdi" size={top.arrowSize || 56} color="var(--vault-ink)" />}
+      </div>
+      <div style={{ paddingTop: r(8), borderTop: '1.5px solid ' + t.rule, display: 'flex', justifyContent: 'space-between', gap: 8, ...mono(10) }}><span>{top.footer}</span><span>{top.footerRight}</span></div>
+    </div>
+  )
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {href ? <a href={href} target="_blank" rel="noreferrer" className="pointer-events-auto" style={{ color: 'inherit', display: 'block', position: 'relative', zIndex: items.length + 1 }}>{head}</a> : head}
+      {rest.map((it, i) => (
+        <div key={i} style={{ position: 'relative', zIndex: items.length - i, marginTop: r(-22), paddingTop: r(34), paddingBottom: r(12), paddingLeft: r(20), paddingRight: r(20), background: (TONES[it.tone] || {}).bg || it.tone, color: '#151515', borderRadius: '0 0 ' + r(22) + ' ' + r(22), display: 'flex', justifyContent: 'space-between', gap: 8, ...mono(11) }}>
+          <span>{it.label}</span><span>{it.meta}</span>
         </div>
       ))}
     </div>
