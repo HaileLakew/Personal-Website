@@ -2,34 +2,58 @@ import { ToneMapping, EffectComposer, Bloom, Glitch } from '@react-three/postpro
 import { BlendFunction } from 'postprocessing'
 import { Line, Sparkles } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
+import { useLoading } from './loadingStore'
+import { getGpuProfile } from './gpuProfile'
 import { MathUtils } from "three"
 import { useScroll, useTransform } from "framer-motion"
 
 
+// Post-processing is the most expensive always-on cost after the particles. Fast GPUs get it as soon as
+// the scene is loaded; slow ones wait a few seconds past load and get a lighter pipeline (no adaptive
+// luminance pass, no glitch pass) so first interaction isn't competing with shader compiles.
+function usePostProcessing() {
+    const { done } = useLoading()
+    const [mode, setMode] = useState('off')
+
+    useEffect(() => {
+        if (!done) return
+        const { lowEnd, software } = getGpuProfile()
+        if (software) return
+        const delay = lowEnd ? 4000 : 0
+        const id = setTimeout(() => setMode(lowEnd ? 'light' : 'full'), delay)
+        return () => clearTimeout(id)
+    }, [done])
+
+    return mode
+}
+
 export default function Effects() {
+    const mode = usePostProcessing()
+
     return (
         <>
-            <EffectComposer disableNormalPass>
-                <ToneMapping
-                    mode={ToneMapping.ACES_FILMIC} // tone mapping mode
-                    blendFunction={BlendFunction.SET} // blend mode
-                    adaptive={true} // toggle adaptive luminance map usage
-                    resolution={256} // texture resolution of the luminance map
-                    middleGrey={.25} // middle grey factor
-                    maxLuminance={16.0} // maximum luminance
-                    averageLuminance={1.0} // average luminance
-                    adaptationRate={1.0} // luminance adaptation rate
-                />
+            {mode !== 'off' && (
+                <EffectComposer disableNormalPass>
+                    <ToneMapping
+                        mode={ToneMapping.ACES_FILMIC} // tone mapping mode
+                        blendFunction={BlendFunction.SET} // blend mode
+                        adaptive={mode === 'full'} // luminance-map pass is skipped on slow GPUs
+                        resolution={256} // texture resolution of the luminance map
+                        middleGrey={.25} // middle grey factor
+                        maxLuminance={16.0} // maximum luminance
+                        averageLuminance={1.0} // average luminance
+                        adaptationRate={1.0} // luminance adaptation rate
+                    />
 
-                <Glitch 
-                    delay={[0, 10]} 
-                    duration={[0.1, 0.2]} 
-                    strength={[0.1, 10]} />
-
-                {/* <Bloom luminanceThreshold={0} luminanceSmoothing={0.0} intensity={1.25} /> */}
-
-            </EffectComposer>
+                    {mode === 'full' && (
+                        <Glitch
+                            delay={[0, 10]}
+                            duration={[0.1, 0.2]}
+                            strength={[0.1, 10]} />
+                    )}
+                </EffectComposer>
+            )}
 
             <Sparkles count={50} position={[0, 1, 0]} size={.5} scale={3} color={'OrangeRed'} noise={50}/>
 

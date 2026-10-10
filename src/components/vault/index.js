@@ -61,12 +61,12 @@ export function Icon({ name, set = 'feather', size = 20, color = 'currentColor' 
   return <span aria-hidden="true" style={{ display: 'inline-block', flex: 'none', width: r(size), height: r(size), background: color, WebkitMask: m, mask: m }} />
 }
 
-export function GaugeGroup({ items = [], height = 10, color = 'currentColor', fill = 'var(--vault-terracotta)' }) {
+export function GaugeGroup({ items = [], height = 64, color = 'currentColor', fill = 'var(--vault-terracotta)' }) {
   return (
-    <div style={{ display: 'flex', gap: r(6), padding: r(6), border: '1.5px solid ' + color, color }}>
+    <div style={{ display: 'flex', gap: r(6), padding: r(6), border: '1.5px solid ' + color, color, width: '100%', boxSizing: 'border-box' }}>
       {items.map((it, i) => (
-        <div key={it.letter || i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: r(4) }}>
-          <div style={{ width: r(20), height: typeof height === 'number' ? r(height) : height, border: '1.5px solid ' + color, boxSizing: 'border-box', display: 'flex', alignItems: 'flex-end' }}>
+        <div key={it.letter || i} style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: r(4) }}>
+          <div style={{ width: '100%', height: typeof height === 'number' ? r(height) : height, border: '1.5px solid ' + color, boxSizing: 'border-box', display: 'flex', alignItems: 'flex-end' }}>
             <div style={{ width: '100%', height: Math.max(0, Math.min(1, it.value)) * 100 + '%', background: fill, transition: 'height .5s cubic-bezier(.2,0,0,1)' }} />
           </div>
           <span style={mono(9, { letterSpacing: 0 })}>{it.letter}</span>

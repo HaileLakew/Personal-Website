@@ -2,17 +2,21 @@ import * as THREE from 'three'
 import { extend } from '@react-three/fiber'
 import glsl from 'babel-plugin-glsl/macro';
 
-const ParticlePositions = (density, modelA) => {
-  var len = density * density * 4;
-  var data = new Float32Array(len);
+// Resample a flat xyz array onto a size*size RGBA texture. Downsamples by striding
+// across the source (keeps the overall shape) and wraps when the source is smaller,
+// so no texel is ever left NaN.
+const ParticlePositions = (size, model) => {
+  const count = Math.floor(model.length / 3);
+  const total = size * size;
+  const data = new Float32Array(total * 4);
 
-  for (let i = 0; i < data.length; i++) {
-    const geometryStride = i * 3
+  for (let i = 0; i < total; i++) {
+    const src = (count >= total ? Math.floor((i * count) / total) : i % count) * 3;
     const stride = i * 4;
 
-    data[stride] = modelA[geometryStride];
-    data[stride + 1] = modelA[geometryStride+1];
-    data[stride + 2] = modelA[geometryStride+2];
+    data[stride] = model[src];
+    data[stride + 1] = model[src + 1];
+    data[stride + 2] = model[src + 2];
     data[stride + 3] = 1.0;
   }
 
@@ -22,11 +26,11 @@ const ParticlePositions = (density, modelA) => {
 
 
 class SimulationMaterial extends THREE.ShaderMaterial {
-  constructor(modelA, modelB, progress) {
-    const positionsTextureA = new THREE.DataTexture(ParticlePositions(512, modelA), 512, 512, THREE.RGBAFormat, THREE.FloatType)
+  constructor(modelA, modelB, progress, size = 512) {
+    const positionsTextureA = new THREE.DataTexture(ParticlePositions(size, modelA), size, size, THREE.RGBAFormat, THREE.FloatType)
     positionsTextureA.needsUpdate = true
 
-    const positionsTextureB = new THREE.DataTexture(ParticlePositions(512, modelB), 512, 512, THREE.RGBAFormat, THREE.FloatType)
+    const positionsTextureB = new THREE.DataTexture(ParticlePositions(size, modelB), size, size, THREE.RGBAFormat, THREE.FloatType)
     positionsTextureB.needsUpdate = true
 
     super({

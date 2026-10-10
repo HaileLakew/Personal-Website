@@ -40,25 +40,33 @@ export default function SkillPage() {
   const html03Opacity = useTransform(scrollYProgress, [.78, .82, .87, .9], [0, 1, 1, 0])
 
   return (
-    <section className="w-screen overflow-visible">
+    <section className="relative z-[2] w-screen overflow-visible">
       {/* 02 · Profile — torn ticket split across the lane */}
       <motion.div className="h-[150vh] w-screen" style={{ opacity: html01Opacity }}>
-        <div className="sticky top-0 h-screen flex flex-col justify-center gap-4">
+        <div className="sticky top-0 h-screen flex flex-col py-[8vh] gap-4">
           <Lane left={label('02 · Profile', '')} right={<div className="hidden md:block">{label('', 'Résumé · PDF')}</div>} />
-          <Lane
+          <Lane className="flex-1 min-h-0 grid-rows-[auto_1fr] md:grid-rows-1"
             left={
+              <div className="h-full flex flex-col justify-start items-start">
+              <div className="w-[78%] md:w-full">
               <TicketStack items={[
                 { tone: 'brass', label: 'Name', meta: '#01', title: 'Haile Lakew', titleSize: 48, footer: '', footerRight: '' },
                 { tone: 'sage', label: '#02 Senior software engineer', meta: 'Role' },
                 { tone: 'var(--vault-terracotta)', label: '#03 B.S. Computer Science', meta: 'Degree' },
               ]} />
+              </div>
+              </div>
             }
             right={
+              <div className="h-full flex flex-col justify-end items-end">
+              <div className="w-[78%] md:w-full">
               <TicketStack href="/docs/HailemeskelLakew-Resume.pdf" items={[
                 { tone: 'steel', label: 'Role', meta: 'Admit one', title: 'Sr. Eng', titleSize: 48, arrow: true, footer: '', footerRight: '' },
                 { tone: 'brass', label: '#04 Résumé · PDF', meta: '↗' },
                 { tone: 'sage', label: '#05 Let\u2019s connect', meta: '↓' },
               ]} />
+              </div>
+              </div>
             }
           />
         </div>

@@ -21,11 +21,14 @@ export function Particles({
   aperture = 308, 
   focus = 5.12 * 2, //color
   curl = .25, 
-  size = 512, ...props }) {
+  size = 256,
+  simEvery = 1, // run the simulation pass every Nth frame
+  ...props }) {
 
   const simRef = useRef()
   const renderRef = useRef()
 
+  const frame = useRef(0)
   const { scrollYProgress } = useScroll()
   const progress = useTransform(scrollYProgress,
     [0, .46, .5, .65], 
@@ -61,11 +64,13 @@ export function Particles({
     if (!simRef.current || !renderRef.current) return
     
     state.gl.autoClear = false
-    // Simulation Pass
-    state.gl.setRenderTarget(target)
-    state.gl.clear() // Clear the FBO buffer
-    state.gl.render(scene, camera)
-    state.gl.setRenderTarget(null)
+    // Simulation Pass (skipped on some frames for slower GPUs; points reuse the last result)
+    if (frame.current++ % simEvery === 0) {
+      state.gl.setRenderTarget(target)
+      state.gl.clear() // Clear the FBO buffer
+      state.gl.render(scene, camera)
+      state.gl.setRenderTarget(null)
+    }
 
     // Update Uniforms (Optimized: direct access to current)
     const rU = renderRef.current.uniforms
@@ -93,7 +98,7 @@ export function Particles({
       {/* Simulation goes into a FBO/Off-buffer */}
       {createPortal(
         <mesh>
-          <simulationMaterial ref={simRef} args={[modelA, modelB, progress]}/>
+          <simulationMaterial ref={simRef} args={[modelA, modelB, progress, size]}/>
           <bufferGeometry>
             <bufferAttribute attach="attributes-position" count={positions.length / 3} array={positions} itemSize={3} />
             <bufferAttribute attach="attributes-uv" count={uvs.length / 2} array={uvs} itemSize={2} />

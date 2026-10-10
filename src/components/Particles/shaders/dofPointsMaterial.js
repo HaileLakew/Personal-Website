@@ -26,7 +26,8 @@ class DofPointsMaterial extends THREE.ShaderMaterial {
           vec2 cxy = 2.0 * gl_PointCoord - 1.0;
           if (dot(cxy, cxy) > 1.0) discard;
           // gl_FragColor = vec4(1, vDistance/4.0, 0, 1);
-          gl_FragColor = vec4(vDistance/3.0, .25, 0, 1);
+          // dark blood orange; red channel still brightens with depth-of-field distance
+          gl_FragColor = vec4(0.25 + vDistance/6.0, 0.07, 0.0, 1.0);
         }
       `,
       uniforms: {

@@ -1,6 +1,7 @@
 'use client'
+import './loadingBridge' // must come first: hooks the loading manager before Models starts fetching
 import { Canvas } from '@react-three/fiber'
-import { AdaptiveDpr, AdaptiveEvents, OrbitControls, PerformanceMonitor, Preload, Stats, Html } from '@react-three/drei'
+import { AdaptiveDpr, AdaptiveEvents, PerformanceMonitor, Stats } from '@react-three/drei'
 
 import CameraRig from './CameraRig'
 import LightingRig from './LightingRig'
@@ -23,7 +24,7 @@ export default function CustomCanvas() {
         [1, 1, 1, 1, 1, .5, 0])
 
     return(
-        <motion.div className="h-screen w-screen fixed  overflow-hidden pointer-events-none"      
+        <motion.div className="h-screen w-screen fixed z-[1] overflow-hidden pointer-events-none"      
             style={{ opacity}}        
             initial={{ opacity: 0, filter: 'blur(50px)' }}
             whileInView={{ opacity: 1, filter: 'blur(0px)', transition: { delay: 1, duration: 3 } }}
@@ -41,7 +42,6 @@ export default function CustomCanvas() {
                             flipflops={2} onFallback={() => setDpr(.8)}
                             onIncline={() => setDpr(.8)} onDecline={() => setDpr(.5)} >
 
-                            <Preload all/>
                             <AdaptiveDpr pixelated/>
                             <AdaptiveEvents />
                             <Stats/>

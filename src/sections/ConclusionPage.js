@@ -1,5 +1,6 @@
 import { Wordmark, Button, Icon, mono, display } from '@/components/vault'
 import { Lane, Reveal } from '@/components/vault/Lane'
+import { LazyVideo } from '@/components/LazyVideo'
 
 // TODO: fill in your LinkedIn URL and email.
 const LINKS = [
@@ -10,11 +11,10 @@ const LINKS = [
 
 export default function ConclusionPage() {
   return (
-    <section id="connect" className="relative h-screen w-screen flex flex-col justify-end border-t border-[#262626] pointer-events-auto overflow-hidden">
-      <video
+    <section id="connect" className="relative z-[2] h-screen w-screen flex flex-col justify-end border-t border-[#262626] pointer-events-auto overflow-hidden">
+      <LazyVideo
         src="/assets/Connect.mp4"
-        autoPlay muted loop playsInline
-        className="absolute inset-0 h-full w-full object-cover z-0"
+        className="absolute inset-0 h-full w-full object-cover z-0 brightness-[.6]"
       />
       <div className="absolute inset-x-0 bottom-0 h-[55%] z-0 bg-gradient-to-t from-[#0E0E0E] to-transparent" />
 

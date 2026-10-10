@@ -1,21 +1,24 @@
 'use client'
 
-import Canvas from "@/components/Canvas";
+import dynamic from "next/dynamic";
 import AboutPage from "@/sections/AboutPage";
 import LandingPage from "@/sections/LandingPage";
-import { Loader } from "@react-three/drei";
+import LoadingBar from "@/components/LoadingBar";
 
 import SkillPage from "@/sections/SkillPage";
-import Overlay from "@/components/Overlay";
 import ConclusionPage from "@/sections/ConclusionPage";
 
 // Section heights are unchanged from the original so CameraRig / Haile scroll keyframes land on the same beats.
+// Heavy client-only chunks (three/drei/postprocessing, lottie) load after the page shell paints
+const Canvas = dynamic(() => import("@/components/Canvas"), { ssr: false });
+const Overlay = dynamic(() => import("@/components/Overlay"), { ssr: false });
+
 export default function Home() {
   return (
     <main className="overflow-clip bg-[#0E0E0E]">
       <Overlay/>
       <Canvas/>
-      <Loader />
+      <LoadingBar />
       <LandingPage/>
       <div className="h-[45vh]"/>
       <AboutPage/>

@@ -1,4 +1,4 @@
-import { useProgress } from '@react-three/drei';
+import { useLoading } from '@/components/loadingStore'
 import { motion } from 'framer-motion'
 import { Wordmark, mono, display, r } from '@/components/vault'
 import { Lane } from '@/components/vault/Lane'
@@ -6,7 +6,7 @@ import { Lane } from '@/components/vault/Lane'
 const navStyle = { ...mono(11), color: '#BDB5A8' }
 
 export default function LandingPage() {
-  const { progress } = useProgress()
+  const { done } = useLoading()
 
   return (
     <section className="relative h-screen w-screen flex flex-col overflow-hidden">
@@ -24,7 +24,7 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {progress === 100 && (
+      {done && (
         <motion.div className="relative z-20 flex-1 flex flex-col justify-end pb-[6vh]"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 1, ease: [.2, 0, 0, 1] }}>
           <Lane
