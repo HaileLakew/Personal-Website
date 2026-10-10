@@ -22,10 +22,6 @@ export default function ConclusionPage() {
         left={
           <Reveal className="flex flex-col gap-6">
             <div style={{ ...mono(11), color: '#BDB5A8' }}>05 · Connect</div>
-            <div className="flex flex-col gap-1">
-              <div style={{ ...display(54, '125%', { lineHeight: .85, letterSpacing: '-.04em' }), color: '#EDE6DA' }}>Let&apos;s</div>
-              <Wordmark text="Connect" size={54} color="var(--vault-brass)" />
-            </div>
             <Button variant="primary" fullWidth href="/docs/HailemeskelLakew-Resume.pdf">Open résumé ↗</Button>
           </Reveal>
         }
